@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Atrapa el Cuadrado</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .game {
+      background: #020617;
+      padding: 20px;
+      border-radius: 16px;
+      width: 400px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+    }
+
+    h1 {
+      margin-top: 0;
+    }
+
+    #board {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      background: #020617;
+      border: 2px solid #38bdf8;
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 20px 0;
+    }
+
+    #square {
+      width: 40px;
+      height: 40px;
+      background: #38bdf8;
+      position: absolute;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    button {
+      background: #38bdf8;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 10px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0ea5e9;
+    }
+  </style>
+</head>
+<body>
+
+<div class="game">
+  <h1>🎯 Atrapa el Cuadrado</h1>
+  <p>Puntos: <span id="score">0</span></p>
+  <p>Tiempo: <span id="time">30</span>s</p>
+
+  <div id="board">
+    <div id="square"></div>
+  </div>
+
+  <button onclick="startGame()">Empezar</button>
+</div>
+
+<script>
+  const square = document.getElementById("square");
+  const board = document.getElementById("board");
+  const scoreEl = document.getElementById("score");
+  const timeEl = document.getElementById("time");
+
+  let score = 0;
+  let time = 30;
+  let interval;
+  let timer;
+
+  function randomPosition() {
+    const maxX = board.clientWidth - square.offsetWidth;
+    const maxY = board.clientHeight - square.offsetHeight;
+    const x = Math.random() * maxX;
+    const y = Math.random() * maxY;
+    square.style.left = x + "px";
+    square.style.top = y + "px";
+  }
+
+  square.addEventListener("click", () => {
+    score++;
+    scoreEl.textContent = score;
+    randomPosition();
+  });
+
+  function startGame() {
+    score = 0;
+    time = 30;
+    scoreEl.textContent = score;
+    timeEl.textContent = time;
+
+    randomPosition();
+
+    clearInterval(interval);
+    clearInterval(timer);
+
+    interval = setInterval(randomPosition, 800);
+
+    timer = setInterval(() => {
+      time--;
+      timeEl.textContent = time;
+      if (time === 0) {
+        clearInterval(interval);
+        clearInterval(timer);
+        alert("⏰ Tiempo terminado! Puntaje: " + score);
+      }
+    }, 1000);
+  }
+</script>
+
+</body>
+</html>
