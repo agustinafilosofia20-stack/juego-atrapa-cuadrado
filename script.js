@@ -1,20 +1,20 @@
+const game = document.getElementById("game");
 const square = document.getElementById("square");
-const gameArea = document.getElementById("game-area");
 const scoreEl = document.getElementById("score");
 const timeEl = document.getElementById("time");
 const restartBtn = document.getElementById("restart");
+
+// 🎧 Solo agregamos sonidos, nada más
+const clickSound = new Audio("assets/click.mp3");
+const restartSound = new Audio("assets/restart.mp3");
 
 let score = 0;
 let time = 30;
 let timer = null;
 
-// sonidos
-const clickSound = new Audio("assets/click.mp3");
-const restartSound = new Audio("assets/restart.mp3");
-
 function moveSquare() {
-  const maxX = gameArea.clientWidth - square.clientWidth;
-  const maxY = gameArea.clientHeight - square.clientHeight;
+  const maxX = game.clientWidth - square.offsetWidth;
+  const maxY = game.clientHeight - square.offsetHeight;
 
   const x = Math.random() * maxX;
   const y = Math.random() * maxY;
@@ -26,41 +26,38 @@ function moveSquare() {
 square.addEventListener("click", () => {
   if (time <= 0) return;
 
-  score++;
-  scoreEl.textContent = score;
-
+  // 🔊 reproducir sonido al hacer click
   clickSound.currentTime = 0;
   clickSound.play();
 
+  score++;
+  scoreEl.textContent = score;
   moveSquare();
 });
 
 function startGame() {
+  // 🔊 reproducir sonido al reiniciar
+  restartSound.currentTime = 0;
+  restartSound.play();
+
   score = 0;
   time = 30;
-
   scoreEl.textContent = score;
   timeEl.textContent = time;
 
   moveSquare();
 
-  if (timer) clearInterval(timer);
-
+  clearInterval(timer);
   timer = setInterval(() => {
     time--;
     timeEl.textContent = time;
 
     if (time <= 0) {
       clearInterval(timer);
-      alert("Fin del juego 🎮 Puntaje: " + score);
     }
   }, 1000);
 }
 
-restartBtn.addEventListener("click", () => {
-  restartSound.currentTime = 0;
-  restartSound.play();
-  startGame();
-});
+restartBtn.addEventListener("click", startGame);
 
 startGame();
