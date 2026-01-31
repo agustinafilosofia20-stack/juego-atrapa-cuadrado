@@ -1,86 +1,66 @@
-// ===============================
-// 🎵 SONIDOS (AGREGADO)
-// ===============================
-const clickSound = new Audio("./assets/click.mp3");
-const restartSound = new Audio("./assets/restart.mp3");
-
-// ===============================
-// 🎮 VARIABLES DEL JUEGO
-// ===============================
-const cuadrado = document.getElementById("cuadrado");
-const scoreText = document.getElementById("score");
-const timeText = document.getElementById("time");
+const square = document.getElementById("square");
+const gameArea = document.getElementById("game-area");
+const scoreEl = document.getElementById("score");
+const timeEl = document.getElementById("time");
 const restartBtn = document.getElementById("restart");
 
 let score = 0;
-let timeLeft = 30;
-let gameInterval;
-let timerInterval;
+let time = 30;
+let timer = null;
 
-// ===============================
-// 📦 FUNCIONES
-// ===============================
-function moverCuadrado() {
-  const maxX = window.innerWidth - 100;
-  const maxY = window.innerHeight - 100;
+// sonidos
+const clickSound = new Audio("assets/click.mp3");
+const restartSound = new Audio("assets/restart.mp3");
+
+function moveSquare() {
+  const maxX = gameArea.clientWidth - square.clientWidth;
+  const maxY = gameArea.clientHeight - square.clientHeight;
 
   const x = Math.random() * maxX;
   const y = Math.random() * maxY;
 
-  cuadrado.style.left = x + "px";
-  cuadrado.style.top = y + "px";
+  square.style.left = x + "px";
+  square.style.top = y + "px";
 }
 
-function iniciarJuego() {
+square.addEventListener("click", () => {
+  if (time <= 0) return;
+
+  score++;
+  scoreEl.textContent = score;
+
+  clickSound.currentTime = 0;
+  clickSound.play();
+
+  moveSquare();
+});
+
+function startGame() {
   score = 0;
-  timeLeft = 30;
+  time = 30;
 
-  scoreText.textContent = score;
-  timeText.textContent = timeLeft;
+  scoreEl.textContent = score;
+  timeEl.textContent = time;
 
-  moverCuadrado();
+  moveSquare();
 
-  gameInterval = setInterval(moverCuadrado, 800);
+  if (timer) clearInterval(timer);
 
-  timerInterval = setInterval(() => {
-    timeLeft--;
-    timeText.textContent = timeLeft;
+  timer = setInterval(() => {
+    time--;
+    timeEl.textContent = time;
 
-    if (timeLeft <= 0) {
-      finalizarJuego();
+    if (time <= 0) {
+      clearInterval(timer);
+      alert("Fin del juego 🎮 Puntaje: " + score);
     }
   }, 1000);
 }
 
-function finalizarJuego() {
-  clearInterval(gameInterval);
-  clearInterval(timerInterval);
-  alert("⏱️ Tiempo terminado! Puntaje: " + score);
-}
-
-// ===============================
-// 🖱️ EVENTOS
-// ===============================
-cuadrado.addEventListener("click", () => {
-  score++;
-  scoreText.textContent = score;
-
-  // 🔊 sonido de click
-  clickSound.currentTime = 0;
-  clickSound.play();
-
-  moverCuadrado();
-});
-
 restartBtn.addEventListener("click", () => {
-  // 🔊 sonido de reinicio
   restartSound.currentTime = 0;
   restartSound.play();
-
-  iniciarJuego();
+  startGame();
 });
 
-// ===============================
-// ▶️ INICIO
-// ===============================
-iniciarJuego();
+startGame();
