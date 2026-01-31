@@ -3,7 +3,6 @@ body {
     text-align: center;
     background: linear-gradient(to right, #a1c4fd, #c2e9fb);
     margin: 0;
-    padding: 0;
 }
 
 header {
@@ -17,7 +16,7 @@ header {
     margin: 20px auto;
     border: 3px solid #333;
     border-radius: 10px;
-    background-color: #fff;
+    background-color: white;
 }
 
 #square {
@@ -34,10 +33,9 @@ button {
     font-size: 16px;
     cursor: pointer;
     border: none;
-    background-color: #4caf50;
-    color: #fff;
     border-radius: 5px;
-    margin-top: 10px;
+    background-color: #4caf50;
+    color: white;
 }
 
 button:hover {
